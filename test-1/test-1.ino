@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 
 long unix_time_ms;
-String unix_time = "1685950999";
+String unix_time = "1687039546";
 int rawDataLength, numChunks, startIndex;
 String chunkData;
 int hours, minutes, seconds;
@@ -28,7 +28,7 @@ struct SensorReading {
 SensorReading sensorReadings[24][MAX_READINGS_PER_HOUR];
 int sensorReadingCounts[24] = {0};
 
-String rawData = "071b070300006f00071b070301106f00071b070300006f00071b0703430006f00071b070300006f00071b070300006f00071b070300006f24";
+String rawData = "111111111111111106f1470301106f00071c389100006f000716f703430006f00024b070300006f00071b071800006f00071b070300006f24";
 
 void HextoDec();
 void setup() {
@@ -62,7 +62,7 @@ void HextoDec() {
     // Parse values from rawData
     // Your parsing code goes here...
 
-         hours = (byte) strtol(chunkData.substring(6, 8).c_str(), NULL, 16);
+     hours = (byte) strtol(chunkData.substring(6, 8).c_str(), NULL, 16);
      minutes = (byte) strtol(chunkData.substring(4, 6).c_str(), NULL, 16);
      seconds = (byte) strtol(chunkData.substring(2, 4).c_str(), NULL, 16);
      milliseconds = (unsigned int) strtol(chunkData.substring(0, 2).c_str(), NULL, 16);
@@ -149,6 +149,7 @@ void HextoDec() {
     if (!hourProcessed[hourint]) {
         // We haven't seen this hour before, create a new JSON object
         hourlyData[hourint] = data.createNestedObject();
+        sDateTime.trim(); 
         hourlyData[hourint]["ts"] = dateTime;
         hourlyData[hourint].createNestedArray("gr");
         hourProcessed[hourint] = true;
@@ -159,6 +160,7 @@ void HextoDec() {
     sensorData["sensor1"] = sensorValue1;
     sensorData["sensor2"] = sensorValue2;
   }
+  Serial.println();
   serializeJson(doc, Serial);
   Serial.println();
 }
